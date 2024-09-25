@@ -714,21 +714,35 @@ var pd = {
             sort: pd.task.paths.sorts[0],
             t: pd.task.paths.timeframes[0],
           },
-        }).then(
+        }).then(        
           function (resp) {
             if (resp.data) {
-              var children = resp.data.children;
-              pd.task.info.donePages++;
-              if (children.length > 0) {
-                pd.task.info.doneItems = 0;
-                pd.task.info.numItems = children.length;
-                pd.task.items = children;
-                pd.actions.children.handleGroup();
-              } else {
-                pd.task.after = "";
-                pd.actions.page.shift();
-                pd.actions.page.next();
+              // Read headers
+              var rateLimitRemaining = parseInt(resp.getResponseHeader('x-ratelimit-remaining'), 10);
+              var rateLimitReset = parseInt(resp.getResponseHeader('x-ratelimit-reset'), 10);
+              console.log('remaining: ' + rateLimitRemaining);
+              console.log('reset: ' + rateLimitReset);
+              // Determine timeout
+              var timeout = 5000; // default timeout
+              if (rateLimitRemaining <= 5) {
+                timeout = (rateLimitReset + 1) * 1000; 
               }
+              console.log('timeout: ' + timeout);
+              // Set the next action with the calculated timeout
+              setTimeout(() => {
+                var children = resp.data.children;
+                pd.task.info.donePages++;
+                if (children.length > 0) {
+                  pd.task.info.doneItems = 0;
+                  pd.task.info.numItems = children.length;
+                  pd.task.items = children;
+                  pd.actions.children.handleGroup();
+                } else {
+                  pd.task.after = "";
+                  pd.actions.page.shift();
+                  pd.actions.page.next();
+                }
+              }, timeout);
             } else {
               pd.task.info.errors++;
               if (
