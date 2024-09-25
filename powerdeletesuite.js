@@ -872,87 +872,104 @@ var pd = {
       },
     },
     delete: function (item) {
-      setTimeout(() => {
-        if (pd.performActions) {
-          $.ajax({
-            url: "/api/del",
-            method: "post",
-            data: {
-              id: item.data.name,
-              executed: "deleted",
-              uh: pd.config.uh,
-              renderstyle: "html",
-            },
-          }).then(
-            function () {
+      if (pd.performActions) {
+        $.ajax({
+          url: "/api/del",
+          method: "post",
+          data: {
+            id: item.data.name,
+            executed: "deleted",
+            uh: pd.config.uh,
+            renderstyle: "html",
+          },
+          complete: function (xhr) {
+            // Read headers
+            var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
+            var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
+            
+            // Determine timeout
+            var timeout = 3000; // default timeout
+            if (rateLimitRemaining <= 5) {
+              timeout = (rateLimitReset + 1) * 1000; 
+            }
+    
+            // Set the next action with the calculated timeout
+            setTimeout(() => {
               pd.task.items[0].pdDeleted = true;
               pd.actions.children.handleSingle();
-            },
-            function () {
-              pd.task.info.errors++;
-              if (
-                confirm(
-                  "Error deleting " +
-                    (item.kind == "t3" ? "post" : "comment") +
-                    ", would you like to retry?"
-                )
-              ) {
-                pd.actions.children.handleSingle();
-              } else {
-                pd.actions.children.finishItem();
-                pd.actions.children.handleGroup();
-              }
-            }
-          );
-        } else {
-          pd.task.items[0].pdDeleted = true;
-          pd.task.after = pd.task.items[0].data.name;
-          pd.actions.children.handleSingle();
-        }
-      }, 7000);
+            }, timeout);
+          }
+        }).fail(function () {
+          pd.task.info.errors++;
+          if (
+            confirm(
+              "Error deleting " +
+                (item.kind == "t3" ? "post" : "comment") +
+                ", would you like to retry?"
+            )
+          ) {
+            pd.actions.children.handleSingle();
+          } else {
+            pd.actions.children.finishItem();
+            pd.actions.children.handleGroup();
+          }
+        });
+      } else {
+        pd.task.items[0].pdDeleted = true;
+        pd.task.after = pd.task.items[0].data.name;
+        pd.actions.children.handleSingle();
+      }
     },
     edit: function (item) {
-      setTimeout(() => {
-        if (pd.performActions) {
-          var editString = pd.task.config.editText ||
-            pd.editStrings[Math.floor(Math.random() * pd.editStrings.length)];
-          $.ajax({
-            url: "/api/editusertext",
-            method: "post",
-            data: {
-              thing_id: item.data.name,
-              text: editString,
-              id: "#form-" + item.data.name,
-              r: item.data.subreddit,
-              uh: pd.config.uh,
-              renderstyle: "html",
-            },
-          }).then(
-            function () {
+      if (pd.performActions) {
+        var editString = pd.task.config.editText ||
+          pd.editStrings[Math.floor(Math.random() * pd.editStrings.length)];
+        $.ajax({
+          url: "/api/editusertext",
+          method: "post",
+          data: {
+            thing_id: item.data.name,
+            text: editString,
+            id: "#form-" + item.data.name,
+            r: item.data.subreddit,
+            uh: pd.config.uh,
+            renderstyle: "html",
+          },
+                complete: function (xhr) {
+            // Read headers
+            var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
+            var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
+            
+            // Determine timeout
+            var timeout = 3000; // default timeout
+            if (rateLimitRemaining <= 5) {
+              timeout = (rateLimitReset + 1) * 1000; 
+            }
+    
+            // Set the next action with the calculated timeout
+            setTimeout(() => {
               pd.task.items[0].pdEdited = true;
               pd.actions.children.handleSingle();
-            },
-            function () {
-              pd.task.info.errors++;
-              if (
-                !confirm(
-                  "Error editing " +
-                    (item.kind == "t3" ? "post" : "comment") +
-                    ", would you like to retry?"
-                )
-              ) {
-                item.pdEdited = true;
-              }
-              pd.actions.children.handleSingle();
-            }
-          );
-        } else {
-          pd.task.items[0].pdEdited = true;
+            }, timeout);
+          }
+        }).fail(function () {
+          pd.task.info.errors++;
+          if (
+            !confirm(
+              "Error editing " +
+                (item.kind == "t3" ? "post" : "comment") +
+                ", would you like to retry?"
+            )
+          ) {
+            item.pdEdited = true;
+          }
           pd.actions.children.handleSingle();
-        }
-      }, 7000);
+        });
+      } else {
+        pd.task.items[0].pdEdited = true;
+        pd.actions.children.handleSingle();
+      }
     },
-  },
   ui: {
     updateDisplay: function () {
       $("#pd__central h2")
