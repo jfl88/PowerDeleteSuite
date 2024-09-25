@@ -887,13 +887,14 @@ var pd = {
             // Read headers
             var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
-            
+            console.log('remaining: ' + rateLimitRemaining);
+            console.log('reset: ' + rateLimitReset);
             // Determine timeout
             var timeout = 5000; // default timeout
             if (rateLimitRemaining <= 5) {
               timeout = (rateLimitReset + 1) * 1000; 
             }
-    
+            console.log('timeout: ' + timeout);
             // Set the next action with the calculated timeout
             setTimeout(() => {
               pd.task.items[0].pdDeleted = true;
@@ -942,13 +943,14 @@ var pd = {
             // Read headers
             var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
-            
+            console.log('remaining: ' + rateLimitRemaining);
+            console.log('reset: ' + rateLimitReset);
             // Determine timeout
             var timeout = 5000; // default timeout
             if (rateLimitRemaining <= 5) {
               timeout = (rateLimitReset + 1) * 1000; 
             }
-    
+            console.log('timeout: ' + timeout);
             // Set the next action with the calculated timeout
             setTimeout(() => {
               pd.task.items[0].pdEdited = true;
