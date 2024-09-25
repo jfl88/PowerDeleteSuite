@@ -975,6 +975,7 @@ var pd = {
         pd.actions.children.handleSingle();
       }
     },
+  },
   ui: {
     updateDisplay: function () {
       $("#pd__central h2")
