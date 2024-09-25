@@ -889,7 +889,7 @@ var pd = {
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
             
             // Determine timeout
-            var timeout = 3000; // default timeout
+            var timeout = 5000; // default timeout
             if (rateLimitRemaining <= 5) {
               timeout = (rateLimitReset + 1) * 1000; 
             }
@@ -944,7 +944,7 @@ var pd = {
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
             
             // Determine timeout
-            var timeout = 3000; // default timeout
+            var timeout = 5000; // default timeout
             if (rateLimitRemaining <= 5) {
               timeout = (rateLimitReset + 1) * 1000; 
             }
