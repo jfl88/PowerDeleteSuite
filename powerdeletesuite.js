@@ -900,7 +900,7 @@ var pd = {
               pd.actions.children.handleSingle();
             }, timeout);
           }
-        }).fail(
+        ).fail(
           function () {
           pd.task.info.errors++;
           if (
@@ -955,7 +955,7 @@ var pd = {
               pd.actions.children.handleSingle();
             }, timeout);
           }
-        }).fail(
+        ).fail(
           function () {
             pd.task.info.errors++;
             if (
