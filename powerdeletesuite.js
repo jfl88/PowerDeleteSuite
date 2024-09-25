@@ -882,7 +882,8 @@ var pd = {
             uh: pd.config.uh,
             renderstyle: "html",
           },
-        }).complete: function (xhr) {
+        }).complete(
+          function (xhr) {
             // Read headers
             var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
@@ -899,7 +900,8 @@ var pd = {
               pd.actions.children.handleSingle();
             }, timeout);
           }
-        }).fail(function () {
+        }).fail(
+          function () {
           pd.task.info.errors++;
           if (
             confirm(
@@ -935,7 +937,8 @@ var pd = {
             uh: pd.config.uh,
             renderstyle: "html",
           },
-        }).complete: function (xhr) {
+        }).complete(
+          function (xhr) {
             // Read headers
             var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
@@ -952,19 +955,21 @@ var pd = {
               pd.actions.children.handleSingle();
             }, timeout);
           }
-        }).fail(function () {
-          pd.task.info.errors++;
-          if (
-            !confirm(
-              "Error editing " +
-                (item.kind == "t3" ? "post" : "comment") +
-                ", would you like to retry?"
-            )
-          ) {
-            item.pdEdited = true;
+        }).fail(
+          function () {
+            pd.task.info.errors++;
+            if (
+              !confirm(
+                "Error editing " +
+                  (item.kind == "t3" ? "post" : "comment") +
+                  ", would you like to retry?"
+              )
+            ) {
+              item.pdEdited = true;
+            }
+            pd.actions.children.handleSingle();
           }
-          pd.actions.children.handleSingle();
-        });
+        );
       } else {
         pd.task.items[0].pdEdited = true;
         pd.actions.children.handleSingle();
