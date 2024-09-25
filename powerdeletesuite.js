@@ -882,7 +882,7 @@ var pd = {
             uh: pd.config.uh,
             renderstyle: "html",
           },
-          complete: function (xhr) {
+        }).complete: function (xhr) {
             // Read headers
             var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
@@ -935,7 +935,7 @@ var pd = {
             uh: pd.config.uh,
             renderstyle: "html",
           },
-                complete: function (xhr) {
+        }).complete: function (xhr) {
             // Read headers
             var rateLimitRemaining = parseInt(xhr.getResponseHeader('x-ratelimit-remaining'), 10);
             var rateLimitReset = parseInt(xhr.getResponseHeader('x-ratelimit-reset'), 10);
