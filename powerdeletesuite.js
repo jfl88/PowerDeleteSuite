@@ -734,7 +734,7 @@ var pd = {
             resp = xhr.responseJSON;
             if (resp.data) {
               const timeout = pd.helpers.getRateLimitTimeout(xhr);
-              console.log('timeout: ' + timeout);
+              console.log(new Date().toLocaleDateString()+ 'timeout: ' + timeout);
               // Set the next action with the calculated timeout
               setTimeout(() => {
                 var children = resp.data.children;
@@ -906,7 +906,7 @@ var pd = {
         }).complete(
           function (xhr) {
             const timeout = pd.helpers.getRateLimitTimeout(xhr);
-            console.log('timeout: ' + timeout);
+            console.log(new Date().toLocaleDateString()+ 'timeout: ' + timeout);
             // Set the next action with the calculated timeout
             setTimeout(() => {
               pd.task.items[0].pdDeleted = true;
@@ -953,7 +953,7 @@ var pd = {
         }).complete(
           function (xhr) {
             const timeout = pd.helpers.getRateLimitTimeout(xhr);
-            console.log('timeout: ' + timeout);
+            console.log(new Date().toLocaleDateString()+ 'timeout: ' + timeout);
             // Set the next action with the calculated timeout
             setTimeout(() => {
               pd.task.items[0].pdEdited = true;
